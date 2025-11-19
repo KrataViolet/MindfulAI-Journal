@@ -1,16 +1,44 @@
-# Run and deploy your AI Studio app
+# MindfulAI Mood Note
 
-This contains everything you need to run your app locally.
+An enhanced intelligent mood tracking journal with dynamic themes, emoji inputs, and data export capabilities, powered by Gemini 2.5.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1DGmk4SWfBKTK5dS4BaHPGzqAbRd9y4jO
+---
 
-## Run Locally
+## 🚀 Live Application
 
-**Prerequisites:**  Node.js
+**Live App Link:** [https://mindfulai-mood-note-166845208052.us-west1.run.app](https://mindfulai-mood-note-166845208052.us-west1.run.app)
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🛠️ Run Locally and Development
+
+This repository contains everything you need to run and develop your app.
+
+**Prerequisites:** Node.js
+
+### Steps
+
+1.  **Install dependencies:**
+    In the project root directory, run the following command:
+    ```bash
+    npm install
+    ```
+
+2.  **Set the Gemini API Key:**
+    The AI analysis feature requires the `GEMINI_API_KEY`. Set this key in a file named `.env.local` in the root of your project. The Vite configuration handles making this available to the app.
+    ```
+    GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+    ```
+
+3.  **Run the app:**
+    Run the app in development mode:
+    ```bash
+    npm run dev
+    ```
+
+### Production Build
+
+To create a production-ready build for deployment, use the following command:
+```bash
+npm run build
+# The optimized static files will be generated in the `dist` folder.
