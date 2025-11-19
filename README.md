@@ -1,4 +1,4 @@
-# MindfulAI Mood Note
+# MindfulAI-Mood-Note
 
 An enhanced intelligent mood tracking journal with dynamic themes, emoji inputs, and data export capabilities, powered by Gemini 2.5.
 
