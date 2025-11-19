@@ -1,12 +1,7 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { JournalEntry } from '../types';
 
-interface AnalyticsChartProps {
-  entries: JournalEntry[];
-}
-
-export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ entries }) => {
+export const AnalyticsChart = ({ entries }) => {
   // Prepare data: Sort by date ascending and format for chart
   const data = [...entries]
     .sort((a, b) => a.timestamp - b.timestamp)
@@ -14,35 +9,38 @@ export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ entries }) => {
       date: new Date(entry.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
       fullDate: new Date(entry.timestamp).toLocaleString(),
       sentiment: entry.analysis?.sentimentScore || 0,
-      summary: entry.analysis?.shortSummary || '',
+      summary: entry.analysis?.shortSummary || 'No Analysis',
+      color: entry.analysis?.colorHex || '#6366f1'
     }));
 
   if (data.length < 2) {
     return (
-       <div className="flex items-center justify-center h-64 bg-white rounded-2xl border border-dashed border-gray-300 text-gray-400">
-         Add at least 2 entries to view trends.
+       <div className="flex flex-col items-center justify-center h-64 bg-white rounded-3xl border border-dashed border-gray-200 text-gray-400 p-6 text-center">
+         <p>Not enough data yet.</p>
+         <p className="text-sm mt-2">Write at least 2 journal entries to unlock your mood trends.</p>
        </div>
     );
   }
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-      <h3 className="text-lg font-semibold text-gray-800 mb-6">Mood Trends</h3>
+    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-gray-100">
+      <div className="flex justify-between items-end mb-8">
+        <div>
+            <h3 className="text-xl font-bold text-gray-800">Emotional Flow</h3>
+            <p className="text-sm text-gray-500 mt-1">Visualizing your sentiment over time</p>
+        </div>
+      </div>
+      
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={data}
-            margin={{
-              top: 10,
-              right: 30,
-              left: 0,
-              bottom: 0,
-            }}
+            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
           >
             <defs>
               <linearGradient id="colorSentiment" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#818cf8" stopOpacity={0.2}/>
+                <stop offset="95%" stopColor="#818cf8" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -52,27 +50,32 @@ export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ entries }) => {
               tickLine={false} 
               tick={{ fontSize: 12, fill: '#94a3b8' }} 
               dy={10}
+              minTickGap={30}
             />
             <YAxis 
               domain={[0, 10]} 
-              hide 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#94a3b8' }}
             />
             <Tooltip 
               contentStyle={{ 
-                borderRadius: '12px', 
+                borderRadius: '16px', 
                 border: 'none', 
-                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' 
+                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                padding: '12px'
               }}
-              cursor={{ stroke: '#6366f1', strokeWidth: 2 }}
+              cursor={{ stroke: '#6366f1', strokeWidth: 1, strokeDasharray: '5 5' }}
             />
             <Area 
               type="monotone" 
               dataKey="sentiment" 
               stroke="#6366f1" 
-              strokeWidth={3}
+              strokeWidth={4}
               fillOpacity={1} 
               fill="url(#colorSentiment)" 
               animationDuration={1500}
+              activeDot={{ r: 6, strokeWidth: 0, fill: '#4f46e5' }}
             />
           </AreaChart>
         </ResponsiveContainer>

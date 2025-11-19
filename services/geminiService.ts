@@ -1,15 +1,15 @@
-import { GoogleGenAI, Type, Schema } from "@google/genai";
-import { MoodAnalysis } from "../types";
+import { GoogleGenAI, Type } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-export const analyzeMood = async (text: string): Promise<MoodAnalysis> => {
-  const schema: Schema = {
+export const analyzeMood = async (text) => {
+  // Define the schema for structured JSON output
+  const schema = {
     type: Type.OBJECT,
     properties: {
       sentimentScore: {
         type: Type.NUMBER,
-        description: "A score from 1 (extremely negative) to 10 (extremely positive) reflecting the mood of the text.",
+        description: "A score from 1 (extremely negative) to 10 (extremely positive) reflecting the mood.",
       },
       emotionalTone: {
         type: Type.ARRAY,
@@ -18,20 +18,20 @@ export const analyzeMood = async (text: string): Promise<MoodAnalysis> => {
       },
       empatheticResponse: {
         type: Type.STRING,
-        description: "A warm, empathetic, and psychological supportive paragraph responding to the user's entry.",
+        description: "A warm, empathetic, and psychological supportive paragraph (approx 50 words) responding to the user.",
       },
       actionableAdvice: {
         type: Type.ARRAY,
         items: { type: Type.STRING },
-        description: "3 specific, small, actionable steps the user can take to improve or maintain their mood.",
+        description: "3 specific, small, actionable steps the user can take right now.",
       },
       colorHex: {
         type: Type.STRING,
-        description: "A hex color code that visually represents the mood (e.g., #FF5733 for angry, #ADD8E6 for calm).",
+        description: "A soft pastel hex color code that represents the mood (e.g. #FFD1DC, #AEC6CF). Avoid neon/harsh colors.",
       },
       shortSummary: {
         type: Type.STRING,
-        description: "A very short 3-5 word summary of the entry.",
+        description: "A 3-5 word summary of the entry title.",
       }
     },
     required: ["sentimentScore", "emotionalTone", "empatheticResponse", "actionableAdvice", "colorHex", "shortSummary"],
@@ -40,29 +40,29 @@ export const analyzeMood = async (text: string): Promise<MoodAnalysis> => {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: `Analyze the following journal entry from a user. Be supportive, insightful, and kind. Entry: "${text}"`,
+      contents: `Analyze this journal entry. Be a kind, non-judgmental therapist. Entry: "${text}"`,
       config: {
         responseMimeType: "application/json",
         responseSchema: schema,
-        systemInstruction: "You are an empathetic AI mental health companion. Your goal is to validate feelings and offer gentle guidance.",
+        systemInstruction: "You are MindfulAI, a compassionate mental health companion. Your goal is to validate feelings, offer perspective, and suggest gentle coping mechanisms. Always be supportive.",
       },
     });
 
     if (response.text) {
-      return JSON.parse(response.text) as MoodAnalysis;
+      return JSON.parse(response.text);
     } else {
       throw new Error("No response text generated");
     }
   } catch (error) {
     console.error("Gemini Analysis Error:", error);
-    // Fallback for error handling
+    // Graceful fallback
     return {
       sentimentScore: 5,
-      emotionalTone: ["Neutral", "Uncertain"],
-      empatheticResponse: "I'm having a little trouble connecting right now, but your feelings are valid. Please try again in a moment.",
-      actionableAdvice: ["Take a deep breath", "Try analyzing again later"],
-      colorHex: "#9ca3af",
-      shortSummary: "Analysis Failed"
+      emotionalTone: ["Neutral", "Quiet"],
+      empatheticResponse: "I'm having a little trouble connecting to my analysis engine right now, but please know your feelings are valid. Writing them down is a great first step.",
+      actionableAdvice: ["Take a deep breath", "Hydrate", "Try again in a moment"],
+      colorHex: "#E5E7EB",
+      shortSummary: "Analysis Unavailable"
     };
   }
 };

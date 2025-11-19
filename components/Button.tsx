@@ -1,32 +1,34 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   isLoading?: boolean;
   icon?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
+export const Button = ({ 
   children, 
   variant = 'primary', 
-  isLoading, 
+  isLoading = false, 
   className = '', 
-  icon,
-  disabled,
+  icon = null,
+  disabled = false,
   ...props 
-}) => {
-  const baseStyles = "inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+}: ButtonProps) => {
+  const baseStyles = "inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transform active:scale-95";
   
-  const variants = {
-    primary: "bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg focus:ring-indigo-500 border border-transparent",
-    secondary: "bg-pink-500 hover:bg-pink-600 text-white shadow-md hover:shadow-lg focus:ring-pink-500 border border-transparent",
-    outline: "bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 focus:ring-indigo-500",
-    ghost: "bg-transparent hover:bg-gray-100 text-gray-600 hover:text-gray-900"
+  const variants: Record<string, string> = {
+    primary: "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-md hover:shadow-lg border-none",
+    secondary: "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 shadow-sm hover:shadow",
+    outline: "bg-transparent border-2 border-indigo-100 text-indigo-600 hover:bg-indigo-50",
+    ghost: "bg-transparent hover:bg-gray-100 text-gray-500 hover:text-gray-900",
+    danger: "bg-red-50 text-red-600 hover:bg-red-100 border border-red-100"
   };
 
   return (
     <button 
-      className={`${baseStyles} ${variants[variant]} ${className}`}
+      className={`${baseStyles} ${variants[variant] || variants.primary} ${className}`}
       disabled={isLoading || disabled}
       {...props}
     >
@@ -36,7 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
       ) : icon ? (
-        <span className="mr-2">{icon}</span>
+        <span className="mr-2 flex items-center">{icon}</span>
       ) : null}
       {children}
     </button>

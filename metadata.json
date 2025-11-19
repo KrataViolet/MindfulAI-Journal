@@ -1,5 +1,5 @@
 {
-  "name": "Copy of MindfulAI Mood Note",
-  "description": "An intelligent mood tracking and journaling application enhanced by Gemini 2.5 to provide sentiment analysis, empathetic feedback, and actionable wellness advice.",
+  "name": "MindfulAI Mood Note",
+  "description": "An enhanced intelligent mood tracking journal with dynamic themes, emoji inputs, and data export capabilities, powered by Gemini 2.5.",
   "requestFramePermissions": []
 }
